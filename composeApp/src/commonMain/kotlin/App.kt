@@ -34,18 +34,24 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kmm_poc.common.entity.LoginEntity
+import com.kmm_poc.common.network.ApiClient
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import composedemo.composeapp.generated.resources.Res
 import composedemo.composeapp.generated.resources.compose_multiplatform
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.compose.resources.vectorResource
 
+
+import org.jetbrains.compose.resources.vectorResource
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 @Preview
@@ -55,6 +61,7 @@ fun App() {
         var userName by remember { mutableStateOf("") }
         var passWord by remember { mutableStateOf("") }
         var hidePassWord by remember { mutableStateOf(false) }
+
         val themeColor =  Color(red = 21, green = 56, blue = 104)
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
@@ -141,7 +148,9 @@ fun App() {
             )
             Button(
                 onClick = {
-
+                    performLoginRequestAndUpdateUI { responseData ->
+                        // Update UI with response data here and navigate to next screen
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth(1f)
@@ -155,6 +164,16 @@ fun App() {
                     color = Color.White
                 )
             }
+        }
+    }
+}
+
+fun performLoginRequestAndUpdateUI(updateResponseData: (LoginEntity) -> Unit) {
+    CoroutineScope(Dispatchers.Main).launch {
+        try {
+            updateResponseData(ApiClient().processLoginReq())
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

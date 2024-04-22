@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -34,6 +35,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -44,10 +47,14 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
             implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.json)
             implementation(libs.ktor.client.serialization)
-
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
